@@ -8,3 +8,9 @@ class CreateTodoRequest(BaseModel):
 class UpdateTodoRequest(BaseModel):
     todo_id: int
     label: str
+
+
+class UserCreateRequest(BaseModel):
+    first_name: str
+    last_name: str
+    email: str
