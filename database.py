@@ -4,8 +4,6 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from dotenv import dotenv_values
 
-from models import Todo, User
-
 config = dotenv_values("./.env")
 username = config.get("DB_USERNAME")
 password = config.get("DB_PASSWORD")
@@ -19,7 +17,7 @@ async def init_db():
     async with engine.begin() as conn:
         # tables = SQLModel.metadata.tables.values()
         # print(tables)
-        await conn.run_sync(SQLModel.metadata.drop_all)
+        # await conn.run_sync(SQLModel.metadata.drop_all)
         await conn.run_sync(SQLModel.metadata.create_all)
 
 
