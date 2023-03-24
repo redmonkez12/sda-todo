@@ -1,3 +1,5 @@
+from app.responses.ErrorResponse import ErrorResponse
+
 login_example = {
     "example": {
         "summary": "Login user endpoint",
@@ -16,11 +18,19 @@ register_example = {
         "value": {
             "first_name": "Tomas",
             "last_name": "Svojanovsky",
+            "username": "testname",
             "email": "tomas.svojanovsky11@gmail.com",
-            "birthdate": "2023-03-14T22:02:12.235359",
+            "birthdate": "1991-01-01",
+            "password": "123456"
         },
     },
 }
+
+register_error_responses = {
+    409: {"model": ErrorResponse},
+    500: {"model": ErrorResponse},
+}
+
 
 change_password_example = {
     "example": {

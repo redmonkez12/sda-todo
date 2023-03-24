@@ -3,13 +3,14 @@ from sqlmodel import Session, select
 from sqlalchemy import exc, func
 
 from app.auth.password import verify_password, get_password_hash
-from app.exceptions import EmailDuplicationException
+from app.exceptions.EmailDuplicationException import EmailDuplicationException
 from app.exceptions.UserNotFoundException import UserNotFoundException
 from app.models.User import User
 from app.models.UserPassword import UserPassword
 from app.requests.ChangePasswordRequest import ChangePasswordRequest
 from app.requests.DeleteTodoRequest import UserCreateRequest
 from app.requests.LoginRequest import LoginRequest
+from app.responses.GetByUsernameResponse import GetByUsernameResponse
 
 
 class UserService:
@@ -36,7 +37,7 @@ class UserService:
         except Exception as e:
             raise Exception(e)
 
-    async def get_by_username(self, username: str):
+    async def get_by_username(self, username: str) -> GetByUsernameResponse:
         query = (
             select(User.user_id, User.username, User.email, UserPassword.value.label("password"))
             .join(UserPassword)
@@ -45,7 +46,7 @@ class UserService:
         )
 
         result = await self.session.execute(query)
-        return result.first()
+        return result.one()
 
     async def login(self, data: LoginRequest):
         user = await self.get_by_username(data.username)
@@ -58,7 +59,7 @@ class UserService:
 
         return user
 
-    async def change_password(self, user: User, request_data: ChangePasswordRequest):
+    async def change_password(self, user: GetByUsernameResponse, request_data: ChangePasswordRequest):
         if not verify_password(request_data.old_password, user.password):
             raise UserNotFoundException("Password is invalid")
 

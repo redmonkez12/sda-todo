@@ -17,3 +17,4 @@ class User(SQLModel, table=True):
     created_at: str = Field(sa_column=sa.Column(sa.DateTime(timezone=True), default=sa.func.now()))
 
     passwords: list["UserPassword"] = Relationship(back_populates="user")
+    todos: list["Todo"] = Relationship(back_populates="user")

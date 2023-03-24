@@ -1,6 +1,6 @@
 import datetime
 
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional
 
 import sqlalchemy as sa
@@ -15,3 +15,5 @@ class Todo(SQLModel, table=True):
     label: str = Field(sa_column=sa.Column(sa.TEXT, nullable=False, unique=True))
     user_id: int = Field(sa_column=sa.Column(sa.Integer, sa.ForeignKey(User.user_id, ondelete="CASCADE"), nullable=False))
     created_at: datetime.datetime = Field(sa_column=sa.Column(sa.DateTime(timezone=True), default=sa.func.now()))
+
+    user: User = Relationship(back_populates="todos")
