@@ -1,11 +1,20 @@
 from sqlmodel import Session, select, and_
 
 from app.models.Todo import Todo
+from app.requests.CreateTodoRequest import CreateTodoRequest
 
 
 class UserTodoService:
     def __init__(self, session: Session):
         self.session = session
+
+    async def create_todo(self, data: CreateTodoRequest, user_id: str):
+        new_todo = Todo(label=data.label, user_id=user_id)
+
+        self.session.add(new_todo)
+        await self.session.commit()
+
+        return new_todo
 
     async def get_todos(self, user_id: int):
         query = (

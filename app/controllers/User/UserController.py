@@ -1,6 +1,6 @@
 from fastapi import Depends, Response, status, Body, APIRouter, HTTPException
 import json
-from typing import Annotated
+from sqlalchemy.orm.exc import NoResultFound
 
 from app.auth.token import create_access_token
 from app.auth.user import get_current_user
@@ -34,7 +34,6 @@ async def create_user(*, user_service: UserService = Depends(get_user_service),
             "status_code": status.HTTP_409_CONFLICT,
         })
     except Exception as e:
-        print(e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail={
             "message": "Something went wrong",
             "code": "INTERNAL_SERVER_ERROR",
@@ -60,9 +59,14 @@ async def login(*, user_service: UserService = Depends(get_user_service),
             detail=str(e),
             headers={"WWW-Authenticate": "Bearer"},
         )
+    except NoResultFound:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid password or username")
     except Exception as e:
-        print(e)
-        return Response(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content="Something went wrong")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail={
+            "message": "Something went wrong",
+            "code": "INTERNAL_SERVER_ERROR",
+            "status_code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+        })
 
 
 @user_router.patch("/password")

@@ -8,10 +8,11 @@ class TodoService:
     def __init__(self, session: Session):
         self.session = session
 
-    async def create_todo(self, data: CreateTodoRequest):
-        new_todo = Todo(label=data.label, user_id=data.user_id)
+    async def create_todo(self, data: CreateTodoRequest, user_id: str):
+        print(user_id, data.label, "prdel")
+        new_todo = Todo(label=data.label, user_id=user_id)
 
-        self.session.add(new_todo)
+        await self.session.add(new_todo)
         await self.session.commit()
 
         return new_todo
