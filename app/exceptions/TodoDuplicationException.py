@@ -1,0 +1,2 @@
+class TodoDuplicationException(Exception):
+    pass

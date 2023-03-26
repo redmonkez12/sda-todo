@@ -1,5 +1,8 @@
+import asyncpg
 from sqlmodel import Session, select, and_
+from sqlalchemy import exc
 
+from app.exceptions.TodoDuplicationException import TodoDuplicationException
 from app.models.Todo import Todo
 from app.requests.CreateTodoRequest import CreateTodoRequest
 
@@ -9,12 +12,17 @@ class UserTodoService:
         self.session = session
 
     async def create_todo(self, data: CreateTodoRequest, user_id: str):
-        new_todo = Todo(label=data.label, user_id=user_id)
+        try:
+            new_todo = Todo(label=data.label, user_id=user_id)
 
-        self.session.add(new_todo)
-        await self.session.commit()
+            self.session.add(new_todo)
+            await self.session.commit()
 
-        return new_todo
+            return new_todo
+        except (exc.IntegrityError, asyncpg.exceptions.UniqueViolationError):
+            raise TodoDuplicationException(f"Todo [{data.label}] already exists")
+        except Exception as e:
+            raise Exception(e)
 
     async def get_todos(self, user_id: int):
         query = (

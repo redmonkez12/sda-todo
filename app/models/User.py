@@ -16,5 +16,5 @@ class User(SQLModel, table=True):
     birthdate: datetime.date = Field(nullable=False)
     created_at: str = Field(sa_column=sa.Column(sa.DateTime(timezone=True), default=sa.func.now()))
 
-    passwords: list["UserPassword"] = Relationship(back_populates="user")
-    todos: list["Todo"] = Relationship(back_populates="user")
+    passwords: list["UserPassword"] = Relationship(back_populates="user", sa_relationship_kwargs={'lazy': 'joined'})
+    todos: list["Todo"] = Relationship(back_populates="user", sa_relationship_kwargs={'lazy': 'joined'})

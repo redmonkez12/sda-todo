@@ -20,3 +20,4 @@ async def get_user_todo_service():
     async with async_session() as session:
         async with session.begin():
             yield UserTodoService(session)
+

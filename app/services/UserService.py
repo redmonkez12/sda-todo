@@ -46,7 +46,7 @@ class UserService:
         )
 
         result = await self.session.execute(query)
-        return result.one()
+        return result.first()
 
     async def login(self, data: LoginRequest):
         user = await self.get_by_username(data.username)
