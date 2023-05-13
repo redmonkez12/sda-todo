@@ -28,6 +28,7 @@ async def create_user(*, user_service: UserService = Depends(get_user_service),
         await user_service.create_user(request)
         return Response(status_code=status.HTTP_201_CREATED)
     except EmailDuplicationException as e:
+        print(e)
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail={
             "message": str(e),
             "code": "EMAIL_DUPLICATION",

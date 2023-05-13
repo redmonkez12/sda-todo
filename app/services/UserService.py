@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import asyncpg
 from sqlmodel import Session, select
 from sqlalchemy import exc, func
@@ -23,7 +25,7 @@ class UserService:
                 first_name=data.first_name,
                 last_name=data.last_name,
                 email=data.email,
-                birthdate=data.birthdate,
+                birthdate=datetime.strptime(data.birthdate, "%Y-%m-%d").date(),
                 username=data.username,
                 passwords=[UserPassword(value=get_password_hash(data.password))],
             )
