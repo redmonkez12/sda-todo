@@ -2,14 +2,18 @@ from sqlmodel import SQLModel
 
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
-from dotenv import dotenv_values
 
-config = dotenv_values("./.env")
-username = config.get("DB_USERNAME")
-password = config.get("DB_PASSWORD")
-dbname = config.get("DB_NAME")
+from settings import Settings
 
-SQLALCHEMY_DATABASE_URL = f"postgresql+asyncpg://{username}:{password}@localhost:5432/{dbname}"
+settings = Settings()
+
+username = settings.DB_USERNAME
+password = settings.DB_PASSWORD
+dbname = settings.DB_NAME
+db_port = settings.DB_PORT
+db_host = settings.DB_HOST
+
+SQLALCHEMY_DATABASE_URL = f"postgresql+asyncpg://{username}:{password}@{db_host}:{db_port}/{dbname}"
 engine = create_async_engine(SQLALCHEMY_DATABASE_URL, echo=True, future=True)
 
 
