@@ -1,7 +1,8 @@
 from fastapi import Depends, APIRouter, Query, status, HTTPException
-from typing import Annotated
+from typing_extensions import Annotated
 
 from sqlalchemy.exc import NoResultFound
+from typing import List
 
 from app.deps import get_todo_service
 from app.models.Todo import Todo
@@ -13,7 +14,7 @@ todo_router = APIRouter(
 )
 
 
-@todo_router.get("/", response_model=list[Todo])
+@todo_router.get("/", response_model=List[Todo])
 async def get_todos(*,
                     todo_service: TodoService = Depends(get_todo_service),
                     page: Annotated[int, Query()],

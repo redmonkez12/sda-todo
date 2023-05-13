@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from fastapi import Depends, status, HTTPException
 from jose import JWTError, jwt
 from fastapi.security import OAuth2PasswordBearer
+from typing import Union
 
 from app.auth.token import SECRET_KEY, ALGORITHM
 from app.deps import get_user_service
@@ -11,7 +12,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 class TokenData(BaseModel):
-    username: str | None = None
+    username: Union[str, None] = None
 
 
 async def get_current_user(
